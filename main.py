@@ -46,7 +46,9 @@ def fifo(cache):
     :param cache: Input cache list
     :return: Cache with first place item removed (element 0)
     """
-    pass
+    if len(cache) > 0:
+        cache.pop(0)
+    return cache
 
 
 def lru(cache):
@@ -55,7 +57,9 @@ def lru(cache):
     :param cache: Input cache list
     :return: Cache with least recently used item removed
     """
-    pass
+    if len(cache) > 0:
+        cache.pop(0)
+    return cache
 
 
 def optff(cache):
