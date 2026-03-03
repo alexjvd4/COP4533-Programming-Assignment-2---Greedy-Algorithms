@@ -62,18 +62,30 @@ def lru(cache):
     return cache
 
 
-def optff(cache):
+def optff(cache, requests):
     """
     Belady’s Farthest-in-Future, optimal offline
+    :param requests: List of requests, earliest at index 0
     :param cache: Input cache list
     :return: Cache after Belady's Farthest-in-Future, optimal offline is applied
     """
-    pass
+    index = 0
+    num_to_remove = 0
+    for num in cache:
+        if num not in requests:
+            cache.remove(num)
+            return cache
+        elif index < requests.index(num):
+            index = requests.index(num)
+            num_to_remove = num
+    cache.remove(num_to_remove)
+    return cache
 
 
-def eviction_selector(num, cache):
+def eviction_selector(num, cache, requests):
     """
     Selects the cache eviction policy based on the parameter
+    :param requests: Incoming requests list
     :param cache: Input cache list
     :param num: Selects which eviction policy to use
     :return: Output of specified eviction policy
@@ -83,13 +95,19 @@ def eviction_selector(num, cache):
     elif num == 1:
         return lru(cache)
     elif num == 2:
-        return optff(cache)
-    return None
+        return optff(cache, requests)
+    return cache
 
 
 def main():
+    # Input handling
     filename = input("Type the name of the txt file to use as input\n")
     cache_capacity, requests = read_input_file(filename)
+
+    # Begin cache insertion and eviction process
+    fifo_misses = 0
+    lru_misses = 0
+    optff_misses = 0
     for i in range(3):
         cache = []
         for request in requests:
@@ -99,8 +117,20 @@ def main():
                 cache.append(request)
                 print("Cache miss!\n")
             else:
-                eviction_selector(i, cache)
-                print("Cache miss!\n")
+                cache = eviction_selector(i, cache, requests)
+                if i == 0:
+                    fifo_misses += 1
+                elif i == 1:
+                    lru_misses += 1
+                elif i == 2:
+                    optff_misses += 1
+                cache.append(request)
+                print("Cache miss! Eviction taking place!\n")
+
+    # Output handling
+    print("FIFO : "+ str(fifo_misses))
+    print("LRU : "+ str(lru_misses))
+    print("OPTFF : " + str(optff_misses))
 
 
 if __name__ == '__main__':
