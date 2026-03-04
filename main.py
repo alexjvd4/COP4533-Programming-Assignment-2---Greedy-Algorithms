@@ -112,6 +112,9 @@ def main():
         cache = []
         for request in requests:
             if request in cache:
+                if i == 1:
+                    cache.remove(request)
+                    cache.append(request)
                 print("Cache hit!\n")
             elif len(cache) < cache_capacity:
                 cache.append(request)
