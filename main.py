@@ -136,9 +136,18 @@ def main():
                 cache.append(request)
 
     # Output handling
-    print("\nFIFO  : " + str(fifo_misses))
-    print("LRU   : " + str(lru_misses))
-    print("OPTFF : " + str(optff_misses))
+    result_text = (
+        "\nFIFO  : " + str(fifo_misses) + "\n" +
+        "LRU   : " + str(lru_misses) + "\n" +
+        "OPTFF : " + str(optff_misses) + "\n"
+    )
+
+    print(result_text)
+
+    with open("output.txt", "w") as out_file:
+        out_file.write(result_text)
+
+    print("Results have been written to output.txt")
 
 
 if __name__ == '__main__':
